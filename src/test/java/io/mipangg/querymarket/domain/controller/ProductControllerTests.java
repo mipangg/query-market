@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mipangg.querymarket.domain.product.Category;
 import io.mipangg.querymarket.domain.product.ProductController;
 import io.mipangg.querymarket.domain.product.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.ProductService;
@@ -38,7 +39,7 @@ class ProductControllerTests {
                 "단팥빵",
                 BigDecimal.valueOf(4200),
                 "seller1@example.com",
-                "FOOD"
+                Category.FOOD
         );
 
         mockMvc.perform(post("/api/products")

@@ -18,5 +18,13 @@ public class ProductService {
     public void saveProduct(ProductCreateRequest resq) {
         Seller seller = sellerService.getOrCreateSeller(resq.sellerEmail());
 
+        productRepository.save(
+                Product.builder()
+                        .name(resq.name())
+                        .price(resq.price())
+                        .seller(seller)
+                        .category(resq.category())
+                        .build()
+        );
     }
 }

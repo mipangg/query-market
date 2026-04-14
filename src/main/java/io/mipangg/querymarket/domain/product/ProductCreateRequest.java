@@ -6,6 +6,6 @@ public record ProductCreateRequest(
         String name,
         BigDecimal price,
         String sellerEmail,
-        String category
+        Category category
 ) {
 }
