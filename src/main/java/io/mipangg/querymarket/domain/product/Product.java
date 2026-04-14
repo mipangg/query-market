@@ -1,5 +1,6 @@
-package io.mipangg.querymarket.domain.entity;
+package io.mipangg.querymarket.domain.product;
 
+import io.mipangg.querymarket.domain.seller.Seller;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

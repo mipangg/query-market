@@ -1,4 +1,4 @@
-package io.mipangg.querymarket.domain.entity;
+package io.mipangg.querymarket.domain.product;
 
 import lombok.Getter;
 
