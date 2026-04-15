@@ -1,5 +1,7 @@
 package io.mipangg.querymarket.domain.seller;
 
+import io.mipangg.querymarket.exception.CustomLogicException;
+import io.mipangg.querymarket.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,10 @@ public class SellerService {
 
                     } catch (DataIntegrityViolationException e) {
                         return sellerRepository.findByEmail(email)
-                                .orElseThrow(() -> new IllegalArgumentException("판매자 생성 실패"));
+                                .orElseThrow(() -> new CustomLogicException(
+                                        ErrorCode.CONFLICT,
+                                        "이미 존재하는 이메일입니다."
+                                ));
                     }
                 });
     }

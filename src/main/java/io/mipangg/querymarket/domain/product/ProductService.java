@@ -2,6 +2,8 @@ package io.mipangg.querymarket.domain.product;
 
 import io.mipangg.querymarket.domain.seller.Seller;
 import io.mipangg.querymarket.domain.seller.SellerService;
+import io.mipangg.querymarket.exception.CustomLogicException;
+import io.mipangg.querymarket.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +32,12 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(long productId) {
+        Product target = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomLogicException(
+                        ErrorCode.NOT_FOUND,
+                        "상품을 찾을 수 없습니다."
+                ));
+
+        productRepository.delete(target);
     }
 }

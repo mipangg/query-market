@@ -1,5 +1,7 @@
 package io.mipangg.querymarket.domain.product;
 
+import io.mipangg.querymarket.exception.CustomLogicException;
+import io.mipangg.querymarket.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
