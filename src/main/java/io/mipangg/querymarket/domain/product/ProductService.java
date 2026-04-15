@@ -27,4 +27,8 @@ public class ProductService {
                         .build()
         );
     }
+
+    @Transactional
+    public void deleteProduct(long productId) {
+    }
 }
