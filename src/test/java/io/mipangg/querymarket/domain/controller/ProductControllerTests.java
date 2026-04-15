@@ -1,6 +1,7 @@
 package io.mipangg.querymarket.domain.controller;
 
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +51,20 @@ class ProductControllerTests {
                 .andDo(print());
 
         verify(productService).saveProduct(resq);
+
+    }
+
+    @Test
+    @DisplayName("productId로 특정 Product 정보를 삭제할 수 있다")
+    void deleteProductSuccessTest() throws Exception {
+
+        long productId = 1L;
+
+        mockMvc.perform(delete("/api/products/{productId}", productId))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        verify(productService).deleteProduct(productId);
 
     }
 

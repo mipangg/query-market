@@ -1,5 +1,6 @@
 package io.mipangg.querymarket.domain.seller;
 
+import static io.mipangg.querymarket.TestUtils.genSellers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -28,9 +29,7 @@ class SellerServiceTests {
     void getOrCreateSellerSuccessCreateTest() {
 
         String email = "seller1@example.com";
-        Seller seller = Seller.builder()
-                .email(email)
-                .build();
+        Seller seller = genSellers().getFirst();
 
         when(sellerRepository.findByEmail(email)).thenReturn(Optional.empty());
         when(sellerRepository.save(any(Seller.class))).thenReturn(seller);
@@ -49,9 +48,7 @@ class SellerServiceTests {
 
 
         String email = "seller1@example.com";
-        Seller seller = Seller.builder()
-                .email(email)
-                .build();
+        Seller seller = genSellers().getFirst();
 
         when(sellerRepository.findByEmail(email)).thenReturn(Optional.of(seller));
 

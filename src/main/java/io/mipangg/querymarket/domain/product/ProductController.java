@@ -1,8 +1,12 @@
 package io.mipangg.querymarket.domain.product;
 
+import io.mipangg.querymarket.exception.CustomLogicException;
+import io.mipangg.querymarket.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +25,14 @@ public class ProductController {
     public void createProduct(@RequestBody @Valid ProductCreateRequest resq) {
 
         productService.saveProduct(resq);
+
+    }
+
+    @DeleteMapping("/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable long productId) {
+
+        productService.deleteProduct(productId);
 
     }
 
