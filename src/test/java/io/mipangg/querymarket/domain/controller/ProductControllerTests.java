@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mipangg.querymarket.domain.product.Category;
-import io.mipangg.querymarket.domain.product.ProductController;
-import io.mipangg.querymarket.domain.product.ProductCreateRequest;
-import io.mipangg.querymarket.domain.product.ProductService;
+import io.mipangg.querymarket.domain.product.entity.Category;
+import io.mipangg.querymarket.domain.product.controller.ProductController;
+import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
+import io.mipangg.querymarket.domain.product.service.ProductService;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

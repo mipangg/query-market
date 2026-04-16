@@ -9,8 +9,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.mipangg.querymarket.domain.seller.Seller;
-import io.mipangg.querymarket.domain.seller.SellerService;
+import io.mipangg.querymarket.domain.product.entity.Category;
+import io.mipangg.querymarket.domain.product.entity.Product;
+import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
+import io.mipangg.querymarket.domain.product.repository.ProductRepository;
+import io.mipangg.querymarket.domain.product.service.ProductService;
+import io.mipangg.querymarket.domain.seller.entity.Seller;
+import io.mipangg.querymarket.domain.seller.service.SellerService;
 import io.mipangg.querymarket.exception.CustomLogicException;
 import java.math.BigDecimal;
 import java.util.Optional;

@@ -1,5 +1,7 @@
-package io.mipangg.querymarket.domain.seller;
+package io.mipangg.querymarket.domain.seller.service;
 
+import io.mipangg.querymarket.domain.seller.entity.Seller;
+import io.mipangg.querymarket.domain.seller.repository.SellerRepository;
 import io.mipangg.querymarket.exception.CustomLogicException;
 import io.mipangg.querymarket.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;

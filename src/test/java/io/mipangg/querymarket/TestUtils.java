@@ -1,8 +1,8 @@
 package io.mipangg.querymarket;
 
-import io.mipangg.querymarket.domain.product.Category;
-import io.mipangg.querymarket.domain.product.Product;
-import io.mipangg.querymarket.domain.seller.Seller;
+import io.mipangg.querymarket.domain.product.entity.Category;
+import io.mipangg.querymarket.domain.product.entity.Product;
+import io.mipangg.querymarket.domain.seller.entity.Seller;
 import java.math.BigDecimal;
 import java.util.List;
 

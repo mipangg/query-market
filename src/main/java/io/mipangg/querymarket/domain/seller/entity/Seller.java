@@ -1,4 +1,4 @@
-package io.mipangg.querymarket.domain.seller;
+package io.mipangg.querymarket.domain.seller.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
