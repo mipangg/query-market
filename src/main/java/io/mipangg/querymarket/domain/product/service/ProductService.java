@@ -48,6 +48,20 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDetailResponse getProduct(long productId) {
-        return null;
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomLogicException(
+                        ErrorCode.NOT_FOUND,
+                        "상품을 찾을 수 없습니다."
+                ));
+
+        product.updateViewCount();
+
+        return new ProductDetailResponse(
+                product.getName(),
+                product.getPrice(),
+                product.getSeller().getEmail(),
+                product.getCategory(),
+                product.getViewCount()
+        );
     }
 }

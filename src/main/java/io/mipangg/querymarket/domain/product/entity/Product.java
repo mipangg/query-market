@@ -62,4 +62,8 @@ public class Product {
         this.viewCount = 0L;
     }
 
+    public void updateViewCount() {
+        this.viewCount++;
+    }
+
 }
