@@ -1,9 +1,14 @@
-package io.mipangg.querymarket.domain.product;
+package io.mipangg.querymarket.domain.product.service;
 
-import io.mipangg.querymarket.domain.seller.Seller;
-import io.mipangg.querymarket.domain.seller.SellerService;
+import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
+import io.mipangg.querymarket.domain.product.repository.ProductRepository;
+import io.mipangg.querymarket.domain.product.entity.Product;
+import io.mipangg.querymarket.domain.seller.entity.Seller;
+import io.mipangg.querymarket.domain.seller.service.SellerService;
 import io.mipangg.querymarket.exception.CustomLogicException;
 import io.mipangg.querymarket.exception.ErrorCode;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,5 +44,24 @@ public class ProductService {
                 ));
 
         productRepository.delete(target);
+    }
+
+    @Transactional
+    public ProductDetailResponse getProduct(long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomLogicException(
+                        ErrorCode.NOT_FOUND,
+                        "상품을 찾을 수 없습니다."
+                ));
+
+        product.updateViewCount();
+
+        return new ProductDetailResponse(
+                product.getName(),
+                product.getPrice(),
+                product.getSeller().getEmail(),
+                product.getCategory(),
+                product.getViewCount()
+        );
     }
 }

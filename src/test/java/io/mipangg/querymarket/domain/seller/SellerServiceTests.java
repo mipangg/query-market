@@ -7,6 +7,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.mipangg.querymarket.domain.seller.entity.Seller;
+import io.mipangg.querymarket.domain.seller.repository.SellerRepository;
+import io.mipangg.querymarket.domain.seller.service.SellerService;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

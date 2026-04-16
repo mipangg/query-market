@@ -1,5 +1,6 @@
-package io.mipangg.querymarket.domain.product;
+package io.mipangg.querymarket.domain.product.repository;
 
+import io.mipangg.querymarket.domain.product.entity.Product;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
