@@ -46,7 +46,7 @@ public class ProductService {
         productRepository.delete(target);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ProductDetailResponse getProduct(long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomLogicException(
