@@ -1,12 +1,14 @@
 package io.mipangg.querymarket.domain.product.service;
 
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.repository.ProductRepository;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import io.mipangg.querymarket.domain.seller.entity.Seller;
 import io.mipangg.querymarket.domain.seller.service.SellerService;
 import io.mipangg.querymarket.exception.CustomLogicException;
 import io.mipangg.querymarket.exception.ErrorCode;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,5 +44,10 @@ public class ProductService {
                 ));
 
         productRepository.delete(target);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDetailResponse getProduct(long productId) {
+        return null;
     }
 }
