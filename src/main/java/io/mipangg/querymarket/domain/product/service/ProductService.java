@@ -1,7 +1,9 @@
 package io.mipangg.querymarket.domain.product.service;
 
+import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
+import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
 import io.mipangg.querymarket.domain.product.repository.ProductRepository;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import io.mipangg.querymarket.domain.seller.entity.Seller;
@@ -62,5 +64,11 @@ public class ProductService {
                 product.getCategory(),
                 product.getViewCount()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<ProductDetailResponse> getAllProducts(ProductListReadRequest req) {
+
+        return null;
     }
 }

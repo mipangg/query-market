@@ -1,7 +1,9 @@
 package io.mipangg.querymarket.domain.product.controller;
 
+import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
+import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
 import io.mipangg.querymarket.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -25,7 +27,9 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody @Valid ProductCreateRequest req) {
+    public void createProduct(
+            @RequestBody @Valid ProductCreateRequest req
+    ) {
 
         productService.saveProduct(req);
 
@@ -33,7 +37,9 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable @Positive long productId) {
+    public void deleteProduct(
+            @PathVariable @Positive long productId
+    ) {
 
         productService.deleteProduct(productId);
 
@@ -41,10 +47,21 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDetailResponse readProduct(@PathVariable @Positive long productId) {
+    public ProductDetailResponse readProductDetail(
+            @PathVariable @Positive long productId
+    ) {
 
         return productService.getProduct(productId);
 
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<ProductDetailResponse> readProducts(
+            @Valid ProductListReadRequest req
+        ) {
+
+        return productService.getAllProducts(req);
     }
 
 }
