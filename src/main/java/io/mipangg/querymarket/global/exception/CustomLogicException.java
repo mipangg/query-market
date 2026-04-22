@@ -1,4 +1,4 @@
-package io.mipangg.querymarket.exception;
+package io.mipangg.querymarket.global.exception;
 
 import lombok.Getter;
 
