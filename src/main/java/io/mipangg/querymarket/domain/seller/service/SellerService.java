@@ -2,8 +2,8 @@ package io.mipangg.querymarket.domain.seller.service;
 
 import io.mipangg.querymarket.domain.seller.entity.Seller;
 import io.mipangg.querymarket.domain.seller.repository.SellerRepository;
-import io.mipangg.querymarket.exception.CustomLogicException;
-import io.mipangg.querymarket.exception.ErrorCode;
+import io.mipangg.querymarket.global.exception.CustomLogicException;
+import io.mipangg.querymarket.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

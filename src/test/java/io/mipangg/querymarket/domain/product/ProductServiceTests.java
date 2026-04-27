@@ -1,5 +1,6 @@
 package io.mipangg.querymarket.domain.product;
 
+import static io.mipangg.querymarket.TestUtils.genProductDetailResponsesSortByPrice;
 import static io.mipangg.querymarket.TestUtils.genProducts;
 import static io.mipangg.querymarket.TestUtils.genSellers;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,7 +11,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
+import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
@@ -18,8 +21,9 @@ import io.mipangg.querymarket.domain.product.repository.ProductRepository;
 import io.mipangg.querymarket.domain.product.service.ProductService;
 import io.mipangg.querymarket.domain.seller.entity.Seller;
 import io.mipangg.querymarket.domain.seller.service.SellerService;
-import io.mipangg.querymarket.exception.CustomLogicException;
+import io.mipangg.querymarket.global.exception.CustomLogicException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +31,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTests {
@@ -136,6 +145,31 @@ class ProductServiceTests {
         ).isInstanceOf(CustomLogicException.class)
                 .hasMessage("데이터를 찾을 수 없습니다.");
 
+    }
+    
+    @Test
+    @DisplayName("전체 상품 조회 시 가격순으로 정렬할 수 있다")
+    void getAllProductsSuccessTest() {
+    
+        ProductListReadRequest req = new ProductListReadRequest(0, 10, "price", null);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("price").ascending());
+
+        List<ProductDetailResponse> content = genProductDetailResponsesSortByPrice();
+        Page<ProductDetailResponse> page = 
+                new PageImpl<>(content, PageRequest.of(1, 10), content.size());
+
+        when(productRepository.findProductDtos(req.category(), pageable)).thenReturn(page);
+
+        PageResponse<ProductDetailResponse> resp = productService.getAllProducts(req);
+
+        assertThat(resp.getContent()).hasSize(content.size());
+        ProductDetailResponse firstProduct = resp.getContent().getFirst();
+        assertThat(firstProduct.name()).isEqualTo("컴퓨터");
+        assertThat(firstProduct.price()).isEqualTo(BigDecimal.valueOf(52000));
+        assertThat(firstProduct.sellerEmail()).isEqualTo("seller4@example.com");
+        assertThat(firstProduct.category()).isEqualTo(Category.ELECTRONICS);
+        assertThat(firstProduct.viewCount()).isEqualTo(30432);
     }
 
 }

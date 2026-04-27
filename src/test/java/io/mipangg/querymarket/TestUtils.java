@@ -1,5 +1,6 @@
 package io.mipangg.querymarket;
 
+import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import io.mipangg.querymarket.domain.seller.entity.Seller;
@@ -78,6 +79,87 @@ public class TestUtils {
                         .seller(genSellers().get(4))
                         .category(Category.FOOD)
                         .build()
+        );
+    }
+
+    public static List<ProductDetailResponse> genProductDetailResponses() {
+        return List.of(
+                new ProductDetailResponse(
+                        "단팥빵",
+                        BigDecimal.valueOf(4200),
+                        genSellers().get(0).getEmail(),
+                        Category.FOOD,
+                        2421
+                ),
+                new ProductDetailResponse(
+                        "수영복",
+                        BigDecimal.valueOf(35000),
+                        genSellers().get(0).getEmail(),
+                        Category.FASHION,
+                        398
+                ),
+                new ProductDetailResponse(
+                        "의자",
+                        BigDecimal.valueOf(10000),
+                        genSellers().get(1).getEmail(),
+                        Category.FURNITURE,
+                        1032
+                ),
+                new ProductDetailResponse(
+                        "컴퓨터",
+                        BigDecimal.valueOf(52000),
+                        genSellers().get(3).getEmail(),
+                        Category.ELECTRONICS,
+                        30432
+                ),
+                new ProductDetailResponse(
+                        "맥주",
+                        BigDecimal.valueOf(10000),
+                        genSellers().get(2).getEmail(),
+                        Category.FOOD,
+                        2909
+                )
+        );
+    }
+
+    public static List<ProductDetailResponse> genProductDetailResponsesSortByPrice() {
+        return List.of(
+                new ProductDetailResponse(
+                        "컴퓨터",
+                        BigDecimal.valueOf(52000),
+                        genSellers().get(3).getEmail(),
+                        Category.ELECTRONICS,
+                        30432
+                ),
+
+                new ProductDetailResponse(
+                        "수영복",
+                        BigDecimal.valueOf(35000),
+                        genSellers().get(0).getEmail(),
+                        Category.FASHION,
+                        398
+                ),
+                new ProductDetailResponse(
+                        "의자",
+                        BigDecimal.valueOf(10000),
+                        genSellers().get(1).getEmail(),
+                        Category.FURNITURE,
+                        1032
+                ),
+                new ProductDetailResponse(
+                        "맥주",
+                        BigDecimal.valueOf(10000),
+                        genSellers().get(2).getEmail(),
+                        Category.FOOD,
+                        2909
+                ),
+                new ProductDetailResponse(
+                        "단팥빵",
+                        BigDecimal.valueOf(4200),
+                        genSellers().get(0).getEmail(),
+                        Category.FOOD,
+                        2421
+                )
         );
     }
 
