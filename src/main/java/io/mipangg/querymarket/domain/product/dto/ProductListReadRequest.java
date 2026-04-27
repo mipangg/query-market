@@ -1,5 +1,6 @@
 package io.mipangg.querymarket.domain.product.dto;
 
+import io.mipangg.querymarket.domain.product.entity.Category;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -17,7 +18,7 @@ public record ProductListReadRequest(
         @Pattern(regexp = "latest|price|views")
         String sort,
 
-        String category
+        Category category
 
 ) {
 
