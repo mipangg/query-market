@@ -27,15 +27,15 @@ public class ProductService {
     private final SellerService sellerService;
 
     @Transactional
-    public void saveProduct(ProductCreateRequest resq) {
-        Seller seller = sellerService.getOrCreateSeller(resq.sellerEmail());
+    public void saveProduct(ProductCreateRequest req) {
+        Seller seller = sellerService.getOrCreateSeller(req.sellerEmail());
 
         productRepository.save(
                 Product.builder()
-                        .name(resq.name())
-                        .price(resq.price())
+                        .name(req.name())
+                        .price(req.price())
                         .seller(seller)
-                        .category(resq.category())
+                        .category(req.category())
                         .build()
         );
     }
