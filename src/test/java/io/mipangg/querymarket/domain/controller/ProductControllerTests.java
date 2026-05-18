@@ -143,4 +143,22 @@ class ProductControllerTests {
 
     }
 
+    @Test
+    @DisplayName("조회 수가 가장 높은 10개의 Product를 조회할 수 있다")
+    void readPopularProductsSuccessTest() throws Exception {
+
+        List<ProductDetailResponse> resp = genProductDetailResponses();
+        when(productService.getPopularProducts()).thenReturn(resp);
+
+        mockMvc.perform(get("/api/products/popular"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name").value("단팥빵"))
+                .andExpect(jsonPath("$[0].price").value(4200))
+                .andExpect(jsonPath("$[0].category").value("FOOD"))
+                .andExpect(jsonPath("$[0].viewCount").value(2421))
+                .andDo(print());
+
+    }
+
 }
