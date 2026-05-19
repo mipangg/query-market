@@ -3,6 +3,7 @@ package io.mipangg.querymarket.domain.product.repository;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.entity.Product;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
               select new io.mipangg.querymarket.domain.product.dto.ProductDetailResponse(
                   p.name, p.price, s.email, p.category, p.viewCount
               )
-              from Product p 
+              from Product p
               join p.seller s
               where (:category is null or p.category = :category)
             """)
@@ -26,4 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("category") Category category,
             Pageable pageable
     );
+
+    @Query("select p from Product p join fetch p.seller order by p.viewCount desc")
+    List<Product> findPopularProducts(Pageable pageable);
 }

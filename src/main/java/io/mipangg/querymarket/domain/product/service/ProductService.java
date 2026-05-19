@@ -10,6 +10,7 @@ import io.mipangg.querymarket.domain.seller.entity.Seller;
 import io.mipangg.querymarket.domain.seller.service.SellerService;
 import io.mipangg.querymarket.global.exception.CustomLogicException;
 import io.mipangg.querymarket.global.exception.ErrorCode;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -91,6 +92,20 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductDetailResponse> getPopularProducts() {
 
-        return null;
+        List<Product> products = productRepository.findPopularProducts(PageRequest.of(0, 10));
+
+        List<ProductDetailResponse> responses = new ArrayList<>();
+        for (Product product : products) {
+            responses.add(
+                    new ProductDetailResponse(
+                            product.getName(),
+                            product.getPrice(),
+                            product.getSeller().getEmail(),
+                            product.getCategory(),
+                            product.getViewCount()
+                    )
+            );
+        }
+        return responses;
     }
 }
