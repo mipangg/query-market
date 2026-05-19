@@ -64,6 +64,7 @@ public class ProductService {
         product.updateViewCount();
 
         return new ProductDetailResponse(
+                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getSeller().getEmail(),
@@ -98,6 +99,7 @@ public class ProductService {
         for (Product product : products) {
             responses.add(
                     new ProductDetailResponse(
+                            product.getId(),
                             product.getName(),
                             product.getPrice(),
                             product.getSeller().getEmail(),

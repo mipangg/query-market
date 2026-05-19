@@ -88,6 +88,7 @@ class ProductControllerTests {
 
         long productId = 1L;
         ProductDetailResponse resp = new ProductDetailResponse(
+                1L,
                 "단팥빵",
                 BigDecimal.valueOf(4200),
                 "seller1@example.com",

@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("""
               select new io.mipangg.querymarket.domain.product.dto.ProductDetailResponse(
-                  p.name, p.price, s.email, p.category, p.viewCount
+                  p.id, p.name, p.price, s.email, p.category, p.viewCount
               )
               from Product p
               join p.seller s

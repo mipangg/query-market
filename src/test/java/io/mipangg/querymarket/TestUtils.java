@@ -85,6 +85,7 @@ public class TestUtils {
     public static List<ProductDetailResponse> genProductDetailResponses() {
         return List.of(
                 new ProductDetailResponse(
+                        1L,
                         "단팥빵",
                         BigDecimal.valueOf(4200),
                         genSellers().get(0).getEmail(),
@@ -92,6 +93,7 @@ public class TestUtils {
                         2421
                 ),
                 new ProductDetailResponse(
+                        2L,
                         "수영복",
                         BigDecimal.valueOf(35000),
                         genSellers().get(0).getEmail(),
@@ -99,6 +101,7 @@ public class TestUtils {
                         398
                 ),
                 new ProductDetailResponse(
+                        3L,
                         "의자",
                         BigDecimal.valueOf(10000),
                         genSellers().get(1).getEmail(),
@@ -106,6 +109,7 @@ public class TestUtils {
                         1032
                 ),
                 new ProductDetailResponse(
+                        4L,
                         "컴퓨터",
                         BigDecimal.valueOf(52000),
                         genSellers().get(3).getEmail(),
@@ -113,6 +117,7 @@ public class TestUtils {
                         30432
                 ),
                 new ProductDetailResponse(
+                        5L,
                         "맥주",
                         BigDecimal.valueOf(10000),
                         genSellers().get(2).getEmail(),
@@ -125,6 +130,7 @@ public class TestUtils {
     public static List<ProductDetailResponse> genProductDetailResponsesSortByPrice() {
         return List.of(
                 new ProductDetailResponse(
+                        1L,
                         "컴퓨터",
                         BigDecimal.valueOf(52000),
                         genSellers().get(3).getEmail(),
@@ -133,6 +139,7 @@ public class TestUtils {
                 ),
 
                 new ProductDetailResponse(
+                        2L,
                         "수영복",
                         BigDecimal.valueOf(35000),
                         genSellers().get(0).getEmail(),
@@ -140,6 +147,7 @@ public class TestUtils {
                         398
                 ),
                 new ProductDetailResponse(
+                        3L,
                         "의자",
                         BigDecimal.valueOf(10000),
                         genSellers().get(1).getEmail(),
@@ -147,6 +155,7 @@ public class TestUtils {
                         1032
                 ),
                 new ProductDetailResponse(
+                        4L,
                         "맥주",
                         BigDecimal.valueOf(10000),
                         genSellers().get(2).getEmail(),
@@ -154,6 +163,7 @@ public class TestUtils {
                         2909
                 ),
                 new ProductDetailResponse(
+                        5L,
                         "단팥빵",
                         BigDecimal.valueOf(4200),
                         genSellers().get(0).getEmail(),
@@ -167,6 +177,7 @@ public class TestUtils {
     public static List<ProductDetailResponse> genProductDetailResponsesSortByViewCount() {
         return List.of(
                 new ProductDetailResponse(
+                        1L,
                         "컴퓨터",
                         BigDecimal.valueOf(52000),
                         genSellers().get(3).getEmail(),
@@ -174,6 +185,7 @@ public class TestUtils {
                         30432
                 ),
                 new ProductDetailResponse(
+                        2L,
                         "맥주",
                         BigDecimal.valueOf(10000),
                         genSellers().get(2).getEmail(),
@@ -181,6 +193,7 @@ public class TestUtils {
                         2909
                 ),
                 new ProductDetailResponse(
+                        3L,
                         "단팥빵",
                         BigDecimal.valueOf(4200),
                         genSellers().get(0).getEmail(),
@@ -188,6 +201,7 @@ public class TestUtils {
                         2421
                 ),
                 new ProductDetailResponse(
+                        4L,
                         "의자",
                         BigDecimal.valueOf(10000),
                         genSellers().get(1).getEmail(),
@@ -195,6 +209,7 @@ public class TestUtils {
                         1032
                 ),
                 new ProductDetailResponse(
+                        5L,
                         "수영복",
                         BigDecimal.valueOf(35000),
                         genSellers().get(0).getEmail(),

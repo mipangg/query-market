@@ -112,6 +112,7 @@ class ProductServiceTests {
         long productId = 1L;
         Product product = genProducts().getFirst();
         ProductDetailResponse expected = new ProductDetailResponse(
+                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getSeller().getEmail(),
