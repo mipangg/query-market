@@ -1,8 +1,10 @@
 package io.mipangg.querymarket.domain.product;
 
 import static io.mipangg.querymarket.TestUtils.genProductDetailResponsesSortByPrice;
+import static io.mipangg.querymarket.TestUtils.genProductDetailResponsesSortByViewCount;
 import static io.mipangg.querymarket.TestUtils.genProducts;
 import static io.mipangg.querymarket.TestUtils.genSellers;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,6 +25,7 @@ import io.mipangg.querymarket.domain.seller.entity.Seller;
 import io.mipangg.querymarket.domain.seller.service.SellerService;
 import io.mipangg.querymarket.global.exception.CustomLogicException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -109,6 +112,7 @@ class ProductServiceTests {
         long productId = 1L;
         Product product = genProducts().getFirst();
         ProductDetailResponse expected = new ProductDetailResponse(
+                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getSeller().getEmail(),
@@ -170,6 +174,43 @@ class ProductServiceTests {
         assertThat(firstProduct.sellerEmail()).isEqualTo("seller4@example.com");
         assertThat(firstProduct.category()).isEqualTo(Category.ELECTRONICS);
         assertThat(firstProduct.viewCount()).isEqualTo(30432);
+    }
+
+    @Test
+    @DisplayName("조회수가 가장 높은 10개의 상품 조회를 할 수 있다")
+    void getPopularProductsSuccessTest() {
+
+        List<Product> products = genProducts();
+
+        when(productRepository.findPopularProducts(PageRequest.of(0, 10))).thenReturn(products);
+
+        List<ProductDetailResponse> result = productService.getPopularProducts();
+
+        assertThat(result).hasSize(products.size());
+        assertThat(result.get(0).name()).isEqualTo("단팥빵");
+        assertThat(result.get(0).price()).isEqualTo(BigDecimal.valueOf(4200));
+        assertThat(result.get(1).name()).isEqualTo("수영복");
+        assertThat(result.get(1).price()).isEqualTo(BigDecimal.valueOf(35000));
+        assertThat(result.get(2).name()).isEqualTo("의자");
+        assertThat(result.get(2).price()).isEqualTo(BigDecimal.valueOf(10000));
+        assertThat(result.get(3).name()).isEqualTo("컴퓨터");
+        assertThat(result.get(3).price()).isEqualTo(BigDecimal.valueOf(52000));
+        assertThat(result.get(4).name()).isEqualTo("맥주");
+        assertThat(result.get(4).price()).isEqualTo(BigDecimal.valueOf(10000));
+
+    }
+
+    @Test
+    @DisplayName("등록된 상품이 없다면 인기 상품 조회 시 빈 리스트가 반환된다")
+    void getPopularProductsEmptySuccessTest() {
+
+        when(productRepository.findPopularProducts(PageRequest.of(0, 10)))
+                .thenReturn(Collections.emptyList());
+
+        List<ProductDetailResponse> result = productService.getPopularProducts();
+
+        assertThat(result).isEmpty();
+
     }
 
 }

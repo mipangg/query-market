@@ -10,6 +10,8 @@ import io.mipangg.querymarket.domain.seller.entity.Seller;
 import io.mipangg.querymarket.domain.seller.service.SellerService;
 import io.mipangg.querymarket.global.exception.CustomLogicException;
 import io.mipangg.querymarket.global.exception.ErrorCode;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,15 +29,15 @@ public class ProductService {
     private final SellerService sellerService;
 
     @Transactional
-    public void saveProduct(ProductCreateRequest resq) {
-        Seller seller = sellerService.getOrCreateSeller(resq.sellerEmail());
+    public void saveProduct(ProductCreateRequest req) {
+        Seller seller = sellerService.getOrCreateSeller(req.sellerEmail());
 
         productRepository.save(
                 Product.builder()
-                        .name(resq.name())
-                        .price(resq.price())
+                        .name(req.name())
+                        .price(req.price())
                         .seller(seller)
-                        .category(resq.category())
+                        .category(req.category())
                         .build()
         );
     }
@@ -62,6 +64,7 @@ public class ProductService {
         product.updateViewCount();
 
         return new ProductDetailResponse(
+                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getSeller().getEmail(),
@@ -85,5 +88,26 @@ public class ProductService {
                 productRepository.findProductDtos(req.category(), pageable);
 
         return new PageResponse<>(productDetailResponsePage);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductDetailResponse> getPopularProducts() {
+
+        List<Product> products = productRepository.findPopularProducts(PageRequest.of(0, 10));
+
+        List<ProductDetailResponse> responses = new ArrayList<>();
+        for (Product product : products) {
+            responses.add(
+                    new ProductDetailResponse(
+                            product.getId(),
+                            product.getName(),
+                            product.getPrice(),
+                            product.getSeller().getEmail(),
+                            product.getCategory(),
+                            product.getViewCount()
+                    )
+            );
+        }
+        return responses;
     }
 }

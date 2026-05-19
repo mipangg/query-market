@@ -88,6 +88,7 @@ class ProductControllerTests {
 
         long productId = 1L;
         ProductDetailResponse resp = new ProductDetailResponse(
+                1L,
                 "단팥빵",
                 BigDecimal.valueOf(4200),
                 "seller1@example.com",
@@ -139,6 +140,24 @@ class ProductControllerTests {
                 .andExpect(jsonPath("$.size").value(20))
                 .andExpect(jsonPath("$.totalElements").value(5))
                 .andExpect(jsonPath("$.hasNext").value(false))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("조회 수가 가장 높은 10개의 Product를 조회할 수 있다")
+    void readPopularProductsSuccessTest() throws Exception {
+
+        List<ProductDetailResponse> resp = genProductDetailResponses();
+        when(productService.getPopularProducts()).thenReturn(resp);
+
+        mockMvc.perform(get("/api/products/popular"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name").value("단팥빵"))
+                .andExpect(jsonPath("$[0].price").value(4200))
+                .andExpect(jsonPath("$[0].category").value("FOOD"))
+                .andExpect(jsonPath("$[0].viewCount").value(2421))
                 .andDo(print());
 
     }

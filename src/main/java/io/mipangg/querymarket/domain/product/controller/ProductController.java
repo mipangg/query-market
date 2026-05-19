@@ -7,6 +7,7 @@ import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
 import io.mipangg.querymarket.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,6 +63,13 @@ public class ProductController {
         ) {
 
         return productService.getAllProducts(req);
+    }
+
+    @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductDetailResponse> readPopularProducts() {
+
+        return productService.getPopularProducts();
     }
 
 }
