@@ -1,6 +1,7 @@
 package io.mipangg.querymarket.domain.product.repository;
 
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
+import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import java.util.List;
@@ -16,14 +17,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findById(long id);
 
     @Query("""
-              select new io.mipangg.querymarket.domain.product.dto.ProductDetailResponse(
-                  p.id, p.name, p.price, s.email, p.category, p.viewCount
+              select new io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse(
+                  p.id, p.name, p.price, p.category
               )
               from Product p
-              join p.seller s
               where (:category is null or p.category = :category)
             """)
-    Page<ProductDetailResponse> findProductDtos(
+    Page<ProductSummaryResponse> findProductDtos(
             @Param("category") Category category,
             Pageable pageable
     );

@@ -3,7 +3,9 @@ package io.mipangg.querymarket.domain.product.service;
 import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
-import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSearchRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
 import io.mipangg.querymarket.domain.product.repository.ProductRepository;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import io.mipangg.querymarket.domain.seller.entity.Seller;
@@ -29,7 +31,7 @@ public class ProductService {
     private final SellerService sellerService;
 
     @Transactional
-    public void saveProduct(ProductCreateRequest req) {
+    public void createProduct(ProductCreateRequest req) {
         Seller seller = sellerService.getOrCreateSeller(req.sellerEmail());
 
         productRepository.save(
@@ -74,7 +76,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductDetailResponse> getAllProducts(ProductListReadRequest req) {
+    public PageResponse<ProductSummaryResponse> getProducts(ProductListRequest req) {
         Pageable pageable;
         if (req.sort().equals("latest")) {
             pageable = PageRequest.of(req.page(), req.size(), Sort.by("createdAt").descending());
@@ -84,30 +86,32 @@ public class ProductService {
             pageable = PageRequest.of(req.page(), req.size(), Sort.by("viewCount").descending());
         }
 
-        Page<ProductDetailResponse> productDetailResponsePage =
+        Page<ProductSummaryResponse> productDetailResponsePage =
                 productRepository.findProductDtos(req.category(), pageable);
 
         return new PageResponse<>(productDetailResponsePage);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDetailResponse> getPopularProducts() {
+    public List<ProductSummaryResponse> getPopularProducts() {
 
         List<Product> products = productRepository.findPopularProducts(PageRequest.of(0, 10));
 
-        List<ProductDetailResponse> responses = new ArrayList<>();
+        List<ProductSummaryResponse> responses = new ArrayList<>();
         for (Product product : products) {
             responses.add(
-                    new ProductDetailResponse(
+                    new ProductSummaryResponse(
                             product.getId(),
                             product.getName(),
                             product.getPrice(),
-                            product.getSeller().getEmail(),
-                            product.getCategory(),
-                            product.getViewCount()
+                            product.getCategory()
                     )
             );
         }
         return responses;
+    }
+
+    public PageResponse<ProductSummaryResponse> searchProducts(ProductSearchRequest req) {
+        return null;
     }
 }

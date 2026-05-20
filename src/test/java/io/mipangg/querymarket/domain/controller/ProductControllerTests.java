@@ -1,8 +1,8 @@
 package io.mipangg.querymarket.domain.controller;
 
-import static io.mipangg.querymarket.TestUtils.genProductDetailResponses;
+import static io.mipangg.querymarket.TestUtils.genProductSummaryResponseSortByViewCount;
+import static io.mipangg.querymarket.TestUtils.genProductSummaryResponses;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -16,7 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
-import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.controller.ProductController;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
@@ -64,7 +65,7 @@ class ProductControllerTests {
                 .andExpect(status().isCreated())
                 .andDo(print());
 
-        verify(productService).saveProduct(req);
+        verify(productService).createProduct(req);
 
     }
 
@@ -117,11 +118,11 @@ class ProductControllerTests {
     @DisplayName("필터링할 카테고리 정보가 포함된 요청으로 페이지네이션 된 상품 목록을 응답할 수 있다")
     void readProductsSuccessTest() throws Exception {
 
-        List<ProductDetailResponse> content = genProductDetailResponses();
-        Page<ProductDetailResponse> page = new PageImpl<>(content, PageRequest.of(0, 20), 5);
-        PageResponse<ProductDetailResponse> resp = new PageResponse<>(page);
+        List<ProductSummaryResponse> content = genProductSummaryResponses();
+        Page<ProductSummaryResponse> page = new PageImpl<>(content, PageRequest.of(0, 20), 5);
+        PageResponse<ProductSummaryResponse> resp = new PageResponse<>(page);
 
-        when(productService.getAllProducts(any(ProductListReadRequest.class))).thenReturn(resp);
+        when(productService.getProducts(any(ProductListRequest.class))).thenReturn(resp);
 
         mockMvc.perform(get("/api/products")
                         .param("page", "0")
@@ -131,11 +132,9 @@ class ProductControllerTests {
                 .andExpect(jsonPath("$.content[0].name").value("단팥빵"))
                 .andExpect(jsonPath("$.content[0].price").value("4200"))
                 .andExpect(jsonPath("$.content[0].category").value("FOOD"))
-                .andExpect(jsonPath("$.content[0].viewCount").value("2421"))
                 .andExpect(jsonPath("$.content[1].name").value("수영복"))
                 .andExpect(jsonPath("$.content[1].price").value("35000"))
                 .andExpect(jsonPath("$.content[1].category").value("FASHION"))
-                .andExpect(jsonPath("$.content[1].viewCount").value("398"))
                 .andExpect(jsonPath("$.page").value(0))
                 .andExpect(jsonPath("$.size").value(20))
                 .andExpect(jsonPath("$.totalElements").value(5))
@@ -148,16 +147,15 @@ class ProductControllerTests {
     @DisplayName("조회 수가 가장 높은 10개의 Product를 조회할 수 있다")
     void readPopularProductsSuccessTest() throws Exception {
 
-        List<ProductDetailResponse> resp = genProductDetailResponses();
+        List<ProductSummaryResponse> resp = genProductSummaryResponseSortByViewCount();
         when(productService.getPopularProducts()).thenReturn(resp);
 
         mockMvc.perform(get("/api/products/popular"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].name").value("단팥빵"))
-                .andExpect(jsonPath("$[0].price").value(4200))
-                .andExpect(jsonPath("$[0].category").value("FOOD"))
-                .andExpect(jsonPath("$[0].viewCount").value(2421))
+                .andExpect(jsonPath("$[0].name").value("컴퓨터"))
+                .andExpect(jsonPath("$[0].price").value(52000))
+                .andExpect(jsonPath("$[0].category").value("ELECTRONICS"))
                 .andDo(print());
 
     }
