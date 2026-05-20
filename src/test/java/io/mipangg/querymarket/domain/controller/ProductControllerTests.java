@@ -160,4 +160,38 @@ class ProductControllerTests {
 
     }
 
+    @Test
+    @DisplayName("검색어로 product를 조회할 수 있다")
+    void searchProductsSuccessTest() throws Exception {
+
+        List<ProductSummaryResponse> content = List.of(
+                new ProductSummaryResponse(
+                        1L,
+                        "단팥빵",
+                        BigDecimal.valueOf(4200),
+                        Category.FOOD
+                )
+        );
+        Page<ProductSummaryResponse> page = new PageImpl<>(content, PageRequest.of(0, 20), 5);
+        PageResponse<ProductSummaryResponse> resp = new PageResponse<>(page);
+
+        when(productService.getProducts(any(ProductListRequest.class))).thenReturn(resp);
+
+        mockMvc.perform(get("/api/products")
+                        .param("keyword", "빵")
+                        .param("page", "0")
+                        .param("size", "20")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].name").value("단팥빵"))
+                .andExpect(jsonPath("$.content[0].price").value("4200"))
+                .andExpect(jsonPath("$.content[0].category").value("FOOD"))
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(20))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.hasNext").value(false))
+                .andDo(print());
+
+    }
+
 }
