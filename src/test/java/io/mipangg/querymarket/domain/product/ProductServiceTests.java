@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSearchRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.entity.Product;
@@ -149,7 +150,7 @@ class ProductServiceTests {
                 .hasMessage("데이터를 찾을 수 없습니다.");
 
     }
-    
+
     @Test
     @DisplayName("전체 상품 조회 시 가격순으로 정렬할 수 있다")
     void getProductsSuccessTest() {
@@ -162,7 +163,7 @@ class ProductServiceTests {
         Page<ProductSummaryResponse> page =
                 new PageImpl<>(content, PageRequest.of(1, 10), content.size());
 
-        when(productRepository.findProductDtos(req.category(), pageable)).thenReturn(page);
+        when(productRepository.findProducts(req.category(), pageable)).thenReturn(page);
 
         PageResponse<ProductSummaryResponse> resp = productService.getProducts(req);
 
@@ -207,6 +208,33 @@ class ProductServiceTests {
         List<ProductSummaryResponse> result = productService.getPopularProducts();
 
         assertThat(result).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("이름에 키워드가 포함된 상품들을 조회할 수 있다")
+    void searchProductsSuccessTest() {
+
+        ProductSearchRequest req = new ProductSearchRequest(null, null, null, "빵");
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+
+        List<ProductSummaryResponse> content =
+                List.of(
+                        new ProductSummaryResponse(
+                                5L,
+                                "단팥빵",
+                                BigDecimal.valueOf(4200),
+                                Category.FOOD
+                        )
+                );
+        Page<ProductSummaryResponse> page =
+                new PageImpl<>(content, PageRequest.of(1, 10), content.size());
+
+        when(productRepository.searchProductsByKeyword(req.keyword(), pageable)).thenReturn(page);
+
+        PageResponse<ProductSummaryResponse> resp = productService.searchProducts(req);
+
+        assertThat(resp.getContent().getFirst().name()).isEqualTo("단팥빵");
 
     }
 

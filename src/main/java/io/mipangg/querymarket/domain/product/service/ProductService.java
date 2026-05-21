@@ -77,19 +77,12 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public PageResponse<ProductSummaryResponse> getProducts(ProductListRequest req) {
-        Pageable pageable;
-        if (req.sort().equals("latest")) {
-            pageable = PageRequest.of(req.page(), req.size(), Sort.by("createdAt").descending());
-        } else if (req.sort().equals("price")) {
-            pageable = PageRequest.of(req.page(), req.size(), Sort.by("price").ascending());
-        } else { // views
-            pageable = PageRequest.of(req.page(), req.size(), Sort.by("viewCount").descending());
-        }
+        Pageable pageable = createPageable(req.page(), req.size(), req.sort());
 
-        Page<ProductSummaryResponse> productDetailResponsePage =
-                productRepository.findProductDtos(req.category(), pageable);
+        Page<ProductSummaryResponse> productSummaryResponsePage =
+                productRepository.findProducts(req.category(), pageable);
 
-        return new PageResponse<>(productDetailResponsePage);
+        return new PageResponse<>(productSummaryResponsePage);
     }
 
     @Transactional(readOnly = true)
@@ -97,9 +90,9 @@ public class ProductService {
 
         List<Product> products = productRepository.findPopularProducts(PageRequest.of(0, 10));
 
-        List<ProductSummaryResponse> responses = new ArrayList<>();
+        List<ProductSummaryResponse> resps = new ArrayList<>();
         for (Product product : products) {
-            responses.add(
+            resps.add(
                     new ProductSummaryResponse(
                             product.getId(),
                             product.getName(),
@@ -108,10 +101,27 @@ public class ProductService {
                     )
             );
         }
-        return responses;
+        return resps;
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<ProductSummaryResponse> searchProducts(ProductSearchRequest req) {
-        return null;
+
+        Pageable pageable = createPageable(req.page(), req.size(), req.sort());
+
+        Page<ProductSummaryResponse> productSummaryResponsePage =
+                productRepository.searchProductsByKeyword(req.keyword().trim(), pageable);
+
+        return new PageResponse<>(productSummaryResponsePage);
+    }
+
+    private Pageable createPageable(int page, int size, String sort) {
+        if (sort.equals("latest")) {
+            return PageRequest.of(page, size, Sort.by("createdAt").descending());
+        } else if (sort.equals("price")) {
+            return PageRequest.of(page, size, Sort.by("price").ascending());
+        } else { // views
+            return PageRequest.of(page, size, Sort.by("viewCount").descending());
+        }
     }
 }
