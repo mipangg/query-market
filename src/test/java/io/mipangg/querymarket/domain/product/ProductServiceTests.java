@@ -1,10 +1,8 @@
 package io.mipangg.querymarket.domain.product;
 
-import static io.mipangg.querymarket.TestUtils.genProductDetailResponsesSortByPrice;
-import static io.mipangg.querymarket.TestUtils.genProductDetailResponsesSortByViewCount;
+import static io.mipangg.querymarket.TestUtils.genProductSummaryResponseSortByPrice;
 import static io.mipangg.querymarket.TestUtils.genProducts;
 import static io.mipangg.querymarket.TestUtils.genSellers;
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,7 +13,9 @@ import static org.mockito.Mockito.when;
 
 import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
-import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSearchRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
@@ -67,7 +67,7 @@ class ProductServiceTests {
 
         when(sellerService.getOrCreateSeller(anyString())).thenReturn(seller);
 
-        productService.saveProduct(resq);
+        productService.createProduct(resq);
 
         verify(productRepository).save(any(Product.class));
 
@@ -150,30 +150,28 @@ class ProductServiceTests {
                 .hasMessage("데이터를 찾을 수 없습니다.");
 
     }
-    
+
     @Test
     @DisplayName("전체 상품 조회 시 가격순으로 정렬할 수 있다")
-    void getAllProductsSuccessTest() {
-    
-        ProductListReadRequest req = new ProductListReadRequest(0, 10, "price", null);
+    void getProductsSuccessTest() {
+
+        ProductListRequest req = new ProductListRequest(0, 10, "price", null);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by("price").ascending());
 
-        List<ProductDetailResponse> content = genProductDetailResponsesSortByPrice();
-        Page<ProductDetailResponse> page = 
+        List<ProductSummaryResponse> content = genProductSummaryResponseSortByPrice();
+        Page<ProductSummaryResponse> page =
                 new PageImpl<>(content, PageRequest.of(1, 10), content.size());
 
-        when(productRepository.findProductDtos(req.category(), pageable)).thenReturn(page);
+        when(productRepository.findProducts(req.category(), pageable)).thenReturn(page);
 
-        PageResponse<ProductDetailResponse> resp = productService.getAllProducts(req);
+        PageResponse<ProductSummaryResponse> resp = productService.getProducts(req);
 
         assertThat(resp.getContent()).hasSize(content.size());
-        ProductDetailResponse firstProduct = resp.getContent().getFirst();
+        ProductSummaryResponse firstProduct = resp.getContent().getFirst();
         assertThat(firstProduct.name()).isEqualTo("컴퓨터");
         assertThat(firstProduct.price()).isEqualTo(BigDecimal.valueOf(52000));
-        assertThat(firstProduct.sellerEmail()).isEqualTo("seller4@example.com");
         assertThat(firstProduct.category()).isEqualTo(Category.ELECTRONICS);
-        assertThat(firstProduct.viewCount()).isEqualTo(30432);
     }
 
     @Test
@@ -184,7 +182,7 @@ class ProductServiceTests {
 
         when(productRepository.findPopularProducts(PageRequest.of(0, 10))).thenReturn(products);
 
-        List<ProductDetailResponse> result = productService.getPopularProducts();
+        List<ProductSummaryResponse> result = productService.getPopularProducts();
 
         assertThat(result).hasSize(products.size());
         assertThat(result.get(0).name()).isEqualTo("단팥빵");
@@ -207,9 +205,36 @@ class ProductServiceTests {
         when(productRepository.findPopularProducts(PageRequest.of(0, 10)))
                 .thenReturn(Collections.emptyList());
 
-        List<ProductDetailResponse> result = productService.getPopularProducts();
+        List<ProductSummaryResponse> result = productService.getPopularProducts();
 
         assertThat(result).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("이름에 키워드가 포함된 상품들을 조회할 수 있다")
+    void searchProductsSuccessTest() {
+
+        ProductSearchRequest req = new ProductSearchRequest(null, null, null, "빵");
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+
+        List<ProductSummaryResponse> content =
+                List.of(
+                        new ProductSummaryResponse(
+                                5L,
+                                "단팥빵",
+                                BigDecimal.valueOf(4200),
+                                Category.FOOD
+                        )
+                );
+        Page<ProductSummaryResponse> page =
+                new PageImpl<>(content, PageRequest.of(1, 10), content.size());
+
+        when(productRepository.searchProductsByKeyword(req.keyword(), pageable)).thenReturn(page);
+
+        PageResponse<ProductSummaryResponse> resp = productService.searchProducts(req);
+
+        assertThat(resp.getContent().getFirst().name()).isEqualTo("단팥빵");
 
     }
 

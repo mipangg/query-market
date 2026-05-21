@@ -1,6 +1,7 @@
 package io.mipangg.querymarket;
 
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
+import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
 import io.mipangg.querymarket.domain.product.entity.Category;
 import io.mipangg.querymarket.domain.product.entity.Product;
 import io.mipangg.querymarket.domain.seller.entity.Seller;
@@ -82,139 +83,109 @@ public class TestUtils {
         );
     }
 
-    public static List<ProductDetailResponse> genProductDetailResponses() {
+    public static List<ProductSummaryResponse> genProductSummaryResponses() {
         return List.of(
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         1L,
                         "단팥빵",
                         BigDecimal.valueOf(4200),
-                        genSellers().get(0).getEmail(),
-                        Category.FOOD,
-                        2421
+                        Category.FOOD
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         2L,
                         "수영복",
                         BigDecimal.valueOf(35000),
-                        genSellers().get(0).getEmail(),
-                        Category.FASHION,
-                        398
+                        Category.FASHION
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         3L,
                         "의자",
                         BigDecimal.valueOf(10000),
-                        genSellers().get(1).getEmail(),
-                        Category.FURNITURE,
-                        1032
+                        Category.FURNITURE
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         4L,
                         "컴퓨터",
                         BigDecimal.valueOf(52000),
-                        genSellers().get(3).getEmail(),
-                        Category.ELECTRONICS,
-                        30432
+                        Category.ELECTRONICS
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         5L,
                         "맥주",
                         BigDecimal.valueOf(10000),
-                        genSellers().get(2).getEmail(),
-                        Category.FOOD,
-                        2909
+                        Category.FOOD
                 )
         );
     }
 
-    public static List<ProductDetailResponse> genProductDetailResponsesSortByPrice() {
+    public static List<ProductSummaryResponse> genProductSummaryResponseSortByPrice() {
         return List.of(
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         1L,
                         "컴퓨터",
                         BigDecimal.valueOf(52000),
-                        genSellers().get(3).getEmail(),
-                        Category.ELECTRONICS,
-                        30432
+                        Category.ELECTRONICS
                 ),
 
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         2L,
                         "수영복",
                         BigDecimal.valueOf(35000),
-                        genSellers().get(0).getEmail(),
-                        Category.FASHION,
-                        398
+                        Category.FASHION
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         3L,
                         "의자",
                         BigDecimal.valueOf(10000),
-                        genSellers().get(1).getEmail(),
-                        Category.FURNITURE,
-                        1032
+                        Category.FURNITURE
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         4L,
                         "맥주",
                         BigDecimal.valueOf(10000),
-                        genSellers().get(2).getEmail(),
-                        Category.FOOD,
-                        2909
+                        Category.FOOD
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         5L,
                         "단팥빵",
                         BigDecimal.valueOf(4200),
-                        genSellers().get(0).getEmail(),
-                        Category.FOOD,
-                        2421
+                        Category.FOOD
                 )
         );
     }
 
 
-    public static List<ProductDetailResponse> genProductDetailResponsesSortByViewCount() {
+    public static List<ProductSummaryResponse> genProductSummaryResponseSortByViewCount() {
         return List.of(
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         1L,
                         "컴퓨터",
                         BigDecimal.valueOf(52000),
-                        genSellers().get(3).getEmail(),
-                        Category.ELECTRONICS,
-                        30432
+                        Category.ELECTRONICS
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         2L,
                         "맥주",
                         BigDecimal.valueOf(10000),
-                        genSellers().get(2).getEmail(),
-                        Category.FOOD,
-                        2909
+                        Category.FOOD
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         3L,
                         "단팥빵",
                         BigDecimal.valueOf(4200),
-                        genSellers().get(0).getEmail(),
-                        Category.FOOD,
-                        2421
+                        Category.FOOD
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         4L,
                         "의자",
                         BigDecimal.valueOf(10000),
-                        genSellers().get(1).getEmail(),
-                        Category.FURNITURE,
-                        1032
+                        Category.FURNITURE
                 ),
-                new ProductDetailResponse(
+                new ProductSummaryResponse(
                         5L,
                         "수영복",
                         BigDecimal.valueOf(35000),
-                        genSellers().get(0).getEmail(),
-                        Category.FASHION,
-                        398
+                        Category.FASHION
                 )
         );
     }

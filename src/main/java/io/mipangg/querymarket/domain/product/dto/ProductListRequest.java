@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 
-public record ProductListReadRequest(
+public record ProductListRequest(
 
         @Min(0)
         @Max(100)
@@ -22,7 +22,7 @@ public record ProductListReadRequest(
 
 ) {
 
-    public ProductListReadRequest {
+    public ProductListRequest {
         if (page == null) {
             page = 0;
         }

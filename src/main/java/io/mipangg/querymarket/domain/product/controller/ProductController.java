@@ -3,7 +3,9 @@ package io.mipangg.querymarket.domain.product.controller;
 import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
-import io.mipangg.querymarket.domain.product.dto.ProductListReadRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSearchRequest;
+import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
 import io.mipangg.querymarket.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -32,7 +34,7 @@ public class ProductController {
             @RequestBody @Valid ProductCreateRequest req
     ) {
 
-        productService.saveProduct(req);
+        productService.createProduct(req);
 
     }
 
@@ -48,7 +50,7 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDetailResponse readProductDetail(
+    public ProductDetailResponse getProduct(
             @PathVariable @Positive long productId
     ) {
 
@@ -58,18 +60,26 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<ProductDetailResponse> readProducts(
-            @Valid ProductListReadRequest req
+    public PageResponse<ProductSummaryResponse> getProducts(
+            @Valid ProductListRequest req
         ) {
 
-        return productService.getAllProducts(req);
+        return productService.getProducts(req);
     }
 
     @GetMapping("/popular")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductDetailResponse> readPopularProducts() {
+    public List<ProductSummaryResponse> getPopularProducts() {
 
         return productService.getPopularProducts();
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<ProductSummaryResponse> searchProducts(
+            @Valid ProductSearchRequest req
+    ) {
+        return productService.searchProducts(req);
     }
 
 }
