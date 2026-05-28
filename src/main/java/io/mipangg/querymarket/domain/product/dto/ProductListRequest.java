@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Pattern;
 public record ProductListRequest(
 
         @Min(0)
-        @Max(100)
+        @Max(10000)
         Integer page,
 
         @Min(0)
@@ -28,7 +28,7 @@ public record ProductListRequest(
         }
 
         if (size == null) {
-            size = 10;
+            size = 20;
         }
 
         if (sort == null || sort.isBlank()) {

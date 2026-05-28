@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 
 public record ProductSearchRequest(
         @Min(0)
-        @Max(100)
+        @Max(10000)
         Integer page,
 
         @Min(0)
@@ -27,7 +27,7 @@ public record ProductSearchRequest(
         }
 
         if (size == null) {
-            size = 10;
+            size = 20;
         }
 
         if (sort == null || sort.isBlank()) {
