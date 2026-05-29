@@ -1,14 +1,19 @@
 package io.mipangg.querymarket.domain.product.dto;
 
 import io.mipangg.querymarket.domain.product.entity.Category;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 
 public record ProductListRequest(
 
+        @Nullable
+        Long cursor,
+
         @Min(0)
-        @Max(10000)
+        @Max(100)
+        @Nullable
         Integer page,
 
         @Min(0)
@@ -23,10 +28,6 @@ public record ProductListRequest(
 ) {
 
     public ProductListRequest {
-        if (page == null) {
-            page = 0;
-        }
-
         if (size == null) {
             size = 20;
         }

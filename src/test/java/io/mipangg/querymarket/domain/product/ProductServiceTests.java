@@ -8,9 +8,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import io.mipangg.querymarket.domain.common.CursorPageResponse;
 import io.mipangg.querymarket.domain.common.PageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
@@ -155,17 +157,20 @@ class ProductServiceTests {
     @DisplayName("전체 상품 조회 시 가격순으로 정렬할 수 있다")
     void getProductsSuccessTest() {
 
-        ProductListRequest req = new ProductListRequest(0, 10, "price", null);
-
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("price").ascending());
+        ProductListRequest req = new ProductListRequest(null, 0, 10, "price", null);
 
         List<ProductSummaryResponse> content = genProductSummaryResponseSortByPrice();
+
         Page<ProductSummaryResponse> page =
-                new PageImpl<>(content, PageRequest.of(1, 10), content.size());
+                new PageImpl<>(content, PageRequest.of(0, 10), content.size());
 
-        when(productRepository.findProducts(req.category(), pageable)).thenReturn(page);
+        when(productRepository.findProducts(
+                isNull(),
+                any(Pageable.class)
+        )).thenReturn(page);
 
-        PageResponse<ProductSummaryResponse> resp = productService.getProducts(req);
+        PageResponse<ProductSummaryResponse> resp =
+                (PageResponse<ProductSummaryResponse>) productService.getProducts(req);
 
         assertThat(resp.getContent()).hasSize(content.size());
         ProductSummaryResponse firstProduct = resp.getContent().getFirst();
@@ -215,8 +220,7 @@ class ProductServiceTests {
     @DisplayName("이름에 키워드가 포함된 상품들을 조회할 수 있다")
     void searchProductsSuccessTest() {
 
-        ProductSearchRequest req = new ProductSearchRequest(null, null, null, "빵");
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+        ProductSearchRequest req = new ProductSearchRequest(null, null, null, null, "빵");
 
         List<ProductSummaryResponse> content =
                 List.of(
@@ -227,12 +231,15 @@ class ProductServiceTests {
                                 Category.FOOD
                         )
                 );
-        Page<ProductSummaryResponse> page =
-                new PageImpl<>(content, PageRequest.of(1, 10), content.size());
 
-        when(productRepository.searchProductsByKeyword(req.keyword(), pageable)).thenReturn(page);
+        when(productRepository.searchProductsByKeywordWithCursor(
+                anyString(),
+                isNull(),
+                any(Pageable.class)
+        )).thenReturn(content);
 
-        PageResponse<ProductSummaryResponse> resp = productService.searchProducts(req);
+        CursorPageResponse<ProductSummaryResponse> resp =
+                (CursorPageResponse<ProductSummaryResponse>)productService.searchProducts(req);
 
         assertThat(resp.getContent().getFirst().name()).isEqualTo("단팥빵");
 

@@ -1,6 +1,8 @@
 package io.mipangg.querymarket.domain.product.service;
 
+import io.mipangg.querymarket.domain.common.CursorPageResponse;
 import io.mipangg.querymarket.domain.common.PageResponse;
+import io.mipangg.querymarket.domain.common.ProductPageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
@@ -76,13 +78,13 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductSummaryResponse> getProducts(ProductListRequest req) {
-        Pageable pageable = createPageable(req.page(), req.size(), req.sort());
+    public ProductPageResponse getProducts(ProductListRequest req) {
 
-        Page<ProductSummaryResponse> productSummaryResponsePage =
-                productRepository.findProducts(req.category(), pageable);
+        if (req.sort().equals("latest")) {
+            return getProductsByCursor(req);
+        }
 
-        return new PageResponse<>(productSummaryResponsePage);
+        return getProductsByOffset(req);
     }
 
     @Transactional(readOnly = true)
@@ -105,23 +107,89 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductSummaryResponse> searchProducts(ProductSearchRequest req) {
+    public ProductPageResponse searchProducts(ProductSearchRequest req) {
+        if (req.sort().equals("latest")) {
+            return searchProductsByCursor(req);
+        }
 
-        Pageable pageable = createPageable(req.page(), req.size(), req.sort());
-
-        Page<ProductSummaryResponse> productSummaryResponsePage =
-                productRepository.searchProductsByKeyword(req.keyword().trim(), pageable);
-
-        return new PageResponse<>(productSummaryResponsePage);
+        return searchProductsByOffset(req);
     }
 
-    private Pageable createPageable(int page, int size, String sort) {
-        if (sort.equals("latest")) {
-            return PageRequest.of(page, size, Sort.by("createdAt").descending());
-        } else if (sort.equals("price")) {
+    private Pageable createPageable(Integer page, Integer size, String sort) {
+        if (sort.equals("price")) {
             return PageRequest.of(page, size, Sort.by("price").ascending());
         } else { // views
             return PageRequest.of(page, size, Sort.by("viewCount").descending());
         }
+    }
+
+
+    private PageResponse getProductsByOffset (ProductListRequest req) {
+        Pageable pageable = createPageable(req.page(), req.size(), req.sort());
+
+        Page<ProductSummaryResponse> products =
+                productRepository.findProducts(req.category(), pageable);
+
+        return new PageResponse<>(products);
+
+    }
+
+    private CursorPageResponse getProductsByCursor(ProductListRequest req) {
+        Pageable pageable = PageRequest.of(0, req.size() + 1);
+
+        List<ProductSummaryResponse> products =
+                productRepository.findProductsByCursor(
+                        req.category(),
+                        req.cursor(),
+                        pageable
+                );
+
+        boolean hasNext = products.size() > req.size();
+
+        if (hasNext) {
+            products.remove(req.size());
+        }
+
+        Long nextCursor = null;
+
+        if (!products.isEmpty()) {
+            nextCursor = products.get(products.size() - 1).id();
+        }
+
+        return new CursorPageResponse<>(products, nextCursor, hasNext);
+    }
+
+    private CursorPageResponse searchProductsByCursor(ProductSearchRequest req) {
+        Pageable pageable = PageRequest.of(0, req.size() + 1);
+
+        List<ProductSummaryResponse> products =
+                productRepository.searchProductsByKeywordWithCursor(
+                        req.keyword().trim(),
+                        req.cursor(),
+                        pageable
+                );
+
+        boolean hasNext = products.size() > req.size();
+
+        if (hasNext) {
+            products.remove(req.size());
+        }
+
+        Long nextCursor = null;
+
+        if (!products.isEmpty()) {
+            nextCursor = products.get(products.size() - 1).id();
+        }
+
+        return new CursorPageResponse<>(products, nextCursor, hasNext);
+    }
+
+    private PageResponse searchProductsByOffset(ProductSearchRequest req) {
+        Pageable pageable = createPageable(req.page(), req.size(), req.sort());
+
+        Page<ProductSummaryResponse> products =
+                productRepository.searchProductsByKeyword(req.keyword(), pageable);
+
+        return new PageResponse<>(products);
     }
 }
