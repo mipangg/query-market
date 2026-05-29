@@ -27,6 +27,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable
     );
 
+    @Query("""
+              select new io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse(
+                  p.id, p.name, p.price, p.category
+              )
+              from Product p
+              where (:category is null or p.category = :category)
+              and (:cursor is null or p.id < :cursor)
+              order by p.id desc
+            """)
+    List<ProductSummaryResponse> findProductsByCursor(
+            @Param("category") Category category,
+            @Param("cursor") Long cursor,
+            Pageable pageable
+    );
+
     @Query("select p from Product p join fetch p.seller order by p.viewCount desc")
     List<Product> findPopularProducts(Pageable pageable);
 
@@ -39,6 +54,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             """)
     Page<ProductSummaryResponse> searchProductsByKeyword(
             @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
+    @Query("""
+              select new io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse(
+                  p.id, p.name, p.price, p.category
+                  )
+                  from Product p
+                  where (lower(p.name) like lower(concat('%', :keyword, '%')))
+                  and (:cursor is null or p.id < :cursor)
+                  order by p.id desc
+            """)
+    List<ProductSummaryResponse> searchProductsByKeywordWithCursor(
+            @Param("keyword") String keyword,
+            @Param("cursor") Long cursor,
             Pageable pageable
     );
 }

@@ -44,7 +44,6 @@ public class Product {
     @Column(nullable = false)
     private Long viewCount;
 
-    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -54,12 +53,20 @@ public class Product {
 
 
     @Builder
-    public Product(String name, BigDecimal price, Category category, Seller seller) {
+    public Product(
+            String name,
+            BigDecimal price,
+            Category category,
+            Seller seller,
+            Long viewCount,
+            LocalDateTime createdAt
+    ) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.seller = seller;
-        this.viewCount = 0L;
+        this.viewCount = (viewCount == null) ? 0L : viewCount;
+        this.createdAt = (createdAt == null) ? LocalDateTime.now() : createdAt;
     }
 
     public void updateViewCount() {

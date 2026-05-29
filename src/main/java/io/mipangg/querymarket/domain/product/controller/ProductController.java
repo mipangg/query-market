@@ -1,6 +1,7 @@
 package io.mipangg.querymarket.domain.product.controller;
 
-import io.mipangg.querymarket.domain.common.PageResponse;
+import io.mipangg.querymarket.domain.common.CursorPageResponse;
+import io.mipangg.querymarket.domain.common.ProductPageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
@@ -60,7 +61,7 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<ProductSummaryResponse> getProducts(
+    public ProductPageResponse getProducts(
             @Valid ProductListRequest req
         ) {
 
@@ -76,7 +77,7 @@ public class ProductController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public PageResponse<ProductSummaryResponse> searchProducts(
+    public ProductPageResponse searchProducts(
             @Valid ProductSearchRequest req
     ) {
         return productService.searchProducts(req);

@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PageResponse<T> {
+public class PageResponse<T> implements ProductPageResponse {
     private List<T> content;        // 현재 페이지 데이터 목록
     private int page;        // 조회할 페이지 번호 (0부터 시작)
     private int size;           // 한 페이지당 조회할 데이터 개수

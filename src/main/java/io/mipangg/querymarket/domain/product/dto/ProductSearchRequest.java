@@ -1,13 +1,20 @@
 package io.mipangg.querymarket.domain.product.dto;
 
+import io.mipangg.querymarket.global.exception.CustomLogicException;
+import io.mipangg.querymarket.global.exception.ErrorCode;
+import io.mipangg.querymarket.global.validation.PaginationValidator;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record ProductSearchRequest(
+
+        @Nullable
+        Long cursor,
+
         @Min(0)
-        @Max(100)
         Integer page,
 
         @Min(0)
@@ -19,6 +26,7 @@ public record ProductSearchRequest(
 
         @NotBlank
         String keyword
+
 ) {
 
     public ProductSearchRequest {
@@ -27,12 +35,18 @@ public record ProductSearchRequest(
         }
 
         if (size == null) {
-            size = 10;
+            size = 20;
         }
 
         if (sort == null || sort.isBlank()) {
-            sort = "latest";
+            if (cursor == null) {
+                sort = "views";
+            } else {
+                sort = "latest";
+            }
         }
+
+        PaginationValidator.validatePaginationStrategy(sort, cursor);
     }
 
 }

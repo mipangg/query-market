@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mipangg.querymarket.domain.common.PageResponse;
+import io.mipangg.querymarket.domain.common.CursorPageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductListRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse;
@@ -28,9 +28,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -119,8 +116,8 @@ class ProductControllerTests {
     void readProductsSuccessTest() throws Exception {
 
         List<ProductSummaryResponse> content = genProductSummaryResponses();
-        Page<ProductSummaryResponse> page = new PageImpl<>(content, PageRequest.of(0, 20), 5);
-        PageResponse<ProductSummaryResponse> resp = new PageResponse<>(page);
+        CursorPageResponse<ProductSummaryResponse> resp =
+                new CursorPageResponse<>(content, null, false);
 
         when(productService.getProducts(any(ProductListRequest.class))).thenReturn(resp);
 
@@ -135,9 +132,6 @@ class ProductControllerTests {
                 .andExpect(jsonPath("$.content[1].name").value("수영복"))
                 .andExpect(jsonPath("$.content[1].price").value("35000"))
                 .andExpect(jsonPath("$.content[1].category").value("FASHION"))
-                .andExpect(jsonPath("$.page").value(0))
-                .andExpect(jsonPath("$.size").value(20))
-                .andExpect(jsonPath("$.totalElements").value(5))
                 .andExpect(jsonPath("$.hasNext").value(false))
                 .andDo(print());
 
@@ -172,8 +166,8 @@ class ProductControllerTests {
                         Category.FOOD
                 )
         );
-        Page<ProductSummaryResponse> page = new PageImpl<>(content, PageRequest.of(0, 20), 5);
-        PageResponse<ProductSummaryResponse> resp = new PageResponse<>(page);
+        CursorPageResponse<ProductSummaryResponse> resp =
+                new CursorPageResponse<>(content, null, false);
 
         when(productService.getProducts(any(ProductListRequest.class))).thenReturn(resp);
 
@@ -186,9 +180,6 @@ class ProductControllerTests {
                 .andExpect(jsonPath("$.content[0].name").value("단팥빵"))
                 .andExpect(jsonPath("$.content[0].price").value("4200"))
                 .andExpect(jsonPath("$.content[0].category").value("FOOD"))
-                .andExpect(jsonPath("$.page").value(0))
-                .andExpect(jsonPath("$.size").value(20))
-                .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.hasNext").value(false))
                 .andDo(print());
 
