@@ -162,7 +162,7 @@ public class ProductService {
     private CursorPageResponse searchProductsByCursor(ProductSearchRequest req) {
         Pageable pageable = PageRequest.of(0, req.size() + 1);
 
-        List<ProductSummaryResponse> products =
+        List<Product> products =
                 productRepository.searchProductsByKeywordWithCursor(
                         req.keyword().trim(),
                         req.cursor(),
@@ -175,20 +175,38 @@ public class ProductService {
             products.remove(req.size());
         }
 
+        List<ProductSummaryResponse> resps = products.stream()
+                .map(product ->
+                        new ProductSummaryResponse(
+                                product.getId(),
+                                product.getName(),
+                                product.getPrice(),
+                                product.getCategory()
+                        )
+                ).toList();
+
         Long nextCursor = null;
 
         if (!products.isEmpty()) {
-            nextCursor = products.get(products.size() - 1).id();
+            nextCursor = products.get(products.size() - 1).getId();
         }
 
-        return new CursorPageResponse<>(products, nextCursor, hasNext);
+        return new CursorPageResponse<>(resps, nextCursor, hasNext);
     }
 
     private PageResponse searchProductsByOffset(ProductSearchRequest req) {
         Pageable pageable = createPageable(req.page(), req.size(), req.sort());
 
         Page<ProductSummaryResponse> products =
-                productRepository.searchProductsByKeyword(req.keyword(), pageable);
+                productRepository.searchProductsByKeyword(req.keyword(), pageable)
+                        .map(product ->
+                                new ProductSummaryResponse(
+                                        product.getId(),
+                                        product.getName(),
+                                        product.getPrice(),
+                                        product.getCategory()
+                                )
+                        );
 
         return new PageResponse<>(products);
     }

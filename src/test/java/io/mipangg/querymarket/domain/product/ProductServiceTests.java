@@ -220,23 +220,15 @@ class ProductServiceTests {
     @DisplayName("이름에 키워드가 포함된 상품들을 조회할 수 있다")
     void searchProductsSuccessTest() {
 
-        ProductSearchRequest req = new ProductSearchRequest(null, null, null, null, "빵");
+        ProductSearchRequest req = new ProductSearchRequest(null, null, null, "latest", "빵");
 
-        List<ProductSummaryResponse> content =
-                List.of(
-                        new ProductSummaryResponse(
-                                5L,
-                                "단팥빵",
-                                BigDecimal.valueOf(4200),
-                                Category.FOOD
-                        )
-                );
+        List<Product> products = genProducts();
 
         when(productRepository.searchProductsByKeywordWithCursor(
                 anyString(),
                 isNull(),
                 any(Pageable.class)
-        )).thenReturn(content);
+        )).thenReturn(products);
 
         CursorPageResponse<ProductSummaryResponse> resp =
                 (CursorPageResponse<ProductSummaryResponse>)productService.searchProducts(req);

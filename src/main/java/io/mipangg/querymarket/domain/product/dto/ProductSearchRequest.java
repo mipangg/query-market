@@ -1,7 +1,5 @@
 package io.mipangg.querymarket.domain.product.dto;
 
-import io.mipangg.querymarket.global.exception.CustomLogicException;
-import io.mipangg.querymarket.global.exception.ErrorCode;
 import io.mipangg.querymarket.global.validation.PaginationValidator;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
