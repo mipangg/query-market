@@ -45,28 +45,38 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p join fetch p.seller order by p.viewCount desc")
     List<Product> findPopularProducts(Pageable pageable);
 
-    @Query("""
-              select new io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse(
-                  p.id, p.name, p.price, p.category
-                  )
-                  from Product p
-                  where (lower(p.name) like lower(concat('%', :keyword, '%')))
-            """)
-    Page<ProductSummaryResponse> searchProductsByKeyword(
+    @Query(
+            value = """
+                    select *
+                    from product p
+                    where match(p.name)
+                                against(:keyword in natural language mode)
+                    """,
+            countQuery = """
+                    select count(*)
+                    from product p
+                    where match(p.name)
+                          against(:keyword in natural language mode)
+                    """,
+            nativeQuery = true
+    )
+    Page<Product> searchProductsByKeyword(
             @Param("keyword") String keyword,
             Pageable pageable
     );
 
-    @Query("""
-              select new io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse(
-                  p.id, p.name, p.price, p.category
-                  )
-                  from Product p
-                  where (lower(p.name) like lower(concat('%', :keyword, '%')))
-                  and (:cursor is null or p.id < :cursor)
-                  order by p.id desc
-            """)
-    List<ProductSummaryResponse> searchProductsByKeywordWithCursor(
+    @Query(
+            value = """
+                    select *
+                    from product p
+                    where match(p.name)
+                                against(:keyword in natural language mode)
+                    and (:cursor is null or p.id < :cursor)
+                    order by p.id desc
+                    """,
+            nativeQuery = true
+    )
+    List<Product> searchProductsByKeywordWithCursor(
             @Param("keyword") String keyword,
             @Param("cursor") Long cursor,
             Pageable pageable

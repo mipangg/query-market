@@ -13,10 +13,16 @@ import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@ConditionalOnProperty(
+        prefix = "app",
+        name = "data-init",
+        havingValue = "true"
+)
 @RequiredArgsConstructor
 public class ProductDummyDataInitializer implements ApplicationRunner {
 
@@ -107,13 +113,13 @@ public class ProductDummyDataInitializer implements ApplicationRunner {
     private String genRandomProductName(int i) {
 
         String[] keywords = {
-                "맥북",
-                "커피",
-                "원두",
-                "텀블러",
-                "키보드",
-                "마우스",
-                "모니터"
+                "MacBook",
+                "Coffee",
+                "Tumbler",
+                "Keyboard",
+                "Mouse",
+                "Monitor",
+                "Bread"
         };
 
         String keyword = keywords[
@@ -121,6 +127,6 @@ public class ProductDummyDataInitializer implements ApplicationRunner {
                         .nextInt(keywords.length)
                 ];
 
-        return keyword + " 상품 " + i;
+        return keyword + " Product " + i;
     }
 }
