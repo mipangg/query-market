@@ -52,6 +52,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     from product p
                     where match(p.name)
                                 against(:keyword in natural language mode)
+                    order by p.price asc
                     """,
             countQuery = """
                     select count(*)
@@ -61,7 +62,28 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     """,
             nativeQuery = true
     )
-    Page<Product> searchProductsByKeyword(
+    Page<Product> searchProductsByKeywordOrderByPrice(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
+    @Query(
+            value = """
+                    select *
+                    from product p
+                    where match(p.name)
+                                against(:keyword in natural language mode)
+                    """,
+            countQuery = """
+                    select count(*)
+                    from product p
+                    where match(p.name)
+                          against(:keyword in natural language mode)
+                    order by p.view_count desc
+                    """,
+            nativeQuery = true
+    )
+    Page<Product> searchProductsByKeywordOrderByViews(
             @Param("keyword") String keyword,
             Pageable pageable
     );

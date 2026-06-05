@@ -17,6 +17,7 @@ public record ProductCreateRequest(
         BigDecimal price,
 
         @Email
+        @NotBlank
         String sellerEmail,
 
         @NotNull
