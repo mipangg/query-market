@@ -13,8 +13,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("select p from Product p join fetch p.seller")
-    Optional<Product> findById(long id);
+    @Query("select p from Product p join fetch p.seller where p.id = :id")
+    Optional<Product> findById(@Param("id") long id);
 
     @Query("""
               select new io.mipangg.querymarket.domain.product.dto.ProductSummaryResponse(
