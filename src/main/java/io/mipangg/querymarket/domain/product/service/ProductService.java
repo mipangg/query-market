@@ -17,6 +17,8 @@ import io.mipangg.querymarket.global.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -87,8 +90,14 @@ public class ProductService {
         return getProductsByOffset(req);
     }
 
+    @Cacheable(
+            value = "popular-products",
+            key = "'top10'"
+    )
     @Transactional(readOnly = true)
     public List<ProductSummaryResponse> getPopularProducts() {
+
+        log.info("DB 조회 발생");
 
         List<Product> products = productRepository.findPopularProducts(PageRequest.of(0, 10));
 
