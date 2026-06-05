@@ -204,18 +204,33 @@ public class ProductService {
     }
 
     private PageResponse searchProductsByOffset(ProductSearchRequest req) {
-        Pageable pageable = createPageable(req.page(), req.size(), req.sort());
+        Pageable pageable = PageRequest.of(req.page(), req.size());
 
-        Page<ProductSummaryResponse> products =
-                productRepository.searchProductsByKeyword(req.keyword(), pageable)
-                        .map(product ->
-                                new ProductSummaryResponse(
-                                        product.getId(),
-                                        product.getName(),
-                                        product.getPrice(),
-                                        product.getCategory()
-                                )
-                        );
+        Page<ProductSummaryResponse> products;
+        if (req.sort().equals("price")) {
+            products =
+                    productRepository.searchProductsByKeywordOrderByPrice(req.keyword(), pageable)
+                            .map(product ->
+                                    new ProductSummaryResponse(
+                                            product.getId(),
+                                            product.getName(),
+                                            product.getPrice(),
+                                            product.getCategory()
+                                    )
+                            );
+
+        } else { // views
+            products =
+                    productRepository.searchProductsByKeywordOrderByViews(req.keyword(), pageable)
+                            .map(product ->
+                                    new ProductSummaryResponse(
+                                            product.getId(),
+                                            product.getName(),
+                                            product.getPrice(),
+                                            product.getCategory()
+                                    )
+                            );
+        }
 
         return new PageResponse<>(products);
     }
