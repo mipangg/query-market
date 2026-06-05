@@ -1,6 +1,5 @@
 package io.mipangg.querymarket.domain.product.controller;
 
-import io.mipangg.querymarket.domain.common.CursorPageResponse;
 import io.mipangg.querymarket.domain.common.ProductPageResponse;
 import io.mipangg.querymarket.domain.product.dto.ProductCreateRequest;
 import io.mipangg.querymarket.domain.product.dto.ProductDetailResponse;
