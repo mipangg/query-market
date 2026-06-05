@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    @Query("select p from Product p join fetch p.seller")
     Optional<Product> findById(long id);
 
     @Query("""
@@ -42,7 +43,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable
     );
 
-    @Query("select p from Product p join fetch p.seller order by p.viewCount desc")
+    @Query("select p from Product p order by p.viewCount desc")
     List<Product> findPopularProducts(Pageable pageable);
 
     @Query(
